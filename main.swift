@@ -1,5 +1,7 @@
 import Foundation
 
+// rules file
+
 let ruleContent = try String(contentsOfFile: "/code/tagRules.txt")
 let ruleParts = ruleContent.split(separator: "\n%---%\n")
 
@@ -30,6 +32,11 @@ for tagSet in ruleParts{
 }
 
 
+// text file
+let textContent = try String(contentsOfFile: "/code/text.txt")
+let textParts = textContent.split(separator: "\n")
+
+// plain file
 let userContent = try String(contentsOfFile: "/code/plain.txt")
 let userParts = userContent.split(separator: "\n")
 
@@ -88,11 +95,8 @@ for str in userParts{
 
     while true {
 
-        //print((identation: identation!, text: text, tag: tag!))
-
         if tagStack.isEmpty {
             let tagInfo = (identation: identation!, text: text, tag: tag!)
-            //print(addToFinalString(tagInfo: tagInfo, position: .initial))
             addToFinalString(tagInfo: tagInfo, position: .initial)
             tagStack.append(tagInfo)
             break
@@ -100,7 +104,6 @@ for str in userParts{
         else
         if tagStack[tagStack.count - 1].identation < identation! {
             let tagInfo = (identation: identation!, text: text, tag: tag!)
-            //print(addToFinalString(tagInfo: tagInfo, position: .initial))
             addToFinalString(tagInfo: tagInfo, position: .initial)
             tagStack.append(tagInfo)
             break
@@ -120,8 +123,8 @@ for _ in tagStack{
     //print(addToFinalString(tagInfo: removedtagInfo, position: .end))
 }
 
-print("----------")
-print(finalString)
+//print("----------")
+//print(finalString)
 
 do {
     let url = URL(fileURLWithPath: "/code/end.html")

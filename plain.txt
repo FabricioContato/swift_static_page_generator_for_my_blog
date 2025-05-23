@@ -1,5 +1,5 @@
 #html 
  #container-card
-  #h2 Card Title
-  #p Card first paragraph
-  #p Card second paragraph
+  #h2 {text}
+  #p {text}
+  #p {text}
