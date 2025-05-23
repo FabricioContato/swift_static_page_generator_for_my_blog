@@ -42,6 +42,8 @@ enum initial_or_end {
     case end
 }
 
+var finalString: String = ""
+
 func getConversion(tagInfo: (identation: Int, text: String?, tag: String), position :initial_or_end) -> String {
     
     let identation = tagInfo.identation
@@ -60,6 +62,12 @@ func getConversion(tagInfo: (identation: Int, text: String?, tag: String), posit
 
         return String(repeating:" ", count: identation) + endValue
     }
+}
+
+func addToFinalString(tagInfo: (identation: Int, text: String?, tag: String), position :initial_or_end) -> Void{
+    //print("----------")
+    finalString += getConversion(tagInfo: tagInfo, position: position) + "\n"
+    //return finalString
 }
 
 for str in userParts{
@@ -84,26 +92,40 @@ for str in userParts{
 
         if tagStack.isEmpty {
             let tagInfo = (identation: identation!, text: text, tag: tag!)
-            print(getConversion(tagInfo: tagInfo, position: .initial))
+            //print(addToFinalString(tagInfo: tagInfo, position: .initial))
+            addToFinalString(tagInfo: tagInfo, position: .initial)
             tagStack.append(tagInfo)
             break
         }
         else
         if tagStack[tagStack.count - 1].identation < identation! {
             let tagInfo = (identation: identation!, text: text, tag: tag!)
-            print(getConversion(tagInfo: tagInfo, position: .initial))
+            //print(addToFinalString(tagInfo: tagInfo, position: .initial))
+            addToFinalString(tagInfo: tagInfo, position: .initial)
             tagStack.append(tagInfo)
             break
         }
         else{
             let removedtagInfo = tagStack.removeLast()
-            print(getConversion(tagInfo: removedtagInfo, position: .end))
+            addToFinalString(tagInfo: removedtagInfo, position: .end)
+            //print(addToFinalString(tagInfo: removedtagInfo, position: .end))
         }
     }
 
 }
 
-for tagInfo in tagStack{
-    print(getConversion(tagInfo: tagInfo, position: .end))
+for _ in tagStack{
+    let removedtagInfo = tagStack.removeLast()
+    addToFinalString(tagInfo: removedtagInfo, position: .end)
+    //print(addToFinalString(tagInfo: removedtagInfo, position: .end))
 }
 
+print("----------")
+print(finalString)
+
+do {
+    let url = URL(fileURLWithPath: "/code/end.html")
+    try finalString.write(to: url, atomically: true, encoding: String.Encoding.utf8)
+} catch {
+    print("erro")
+}

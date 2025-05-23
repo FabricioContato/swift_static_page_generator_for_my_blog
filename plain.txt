@@ -1,6 +1,5 @@
-#container-card
- #h2 h2_text
- #h3 h3_text
- #pre
-  #code
- #p
+#html 
+ #container-card
+  #h2 Card Title
+  #p Card first paragraph
+  #p Card second paragraph
