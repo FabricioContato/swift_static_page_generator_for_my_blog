@@ -1,11 +1,18 @@
 import Foundation
 
-// rules file
+print("<tag-file-name> <text-file-name> <output-file-name>")
+let userInputs = readLine()!.split(separator: " ")
+
+let tagFileName = userInputs[0]
+let textFileName = userInputs[1]
+let outputFileName = userInputs[2]
+
+
 
 let ruleContent = try String(contentsOfFile: "/code/tagRules.txt")
 let ruleParts = ruleContent.split(separator: "\n%---%\n")
 
-var tagValuesDict: [String: (initial: String, text: String?, end: String)] = [:]
+var tagValuesDict: [String: (initial: String, placeHolder: String?, end: String)] = [:]
 var existingTags: [String] = []
 
 for tagSet in ruleParts{
@@ -25,24 +32,25 @@ for tagSet in ruleParts{
 
     let endRule = String(tagSet[endRuleStartIndex..<endRuleFinalIndex])
 
-    tagValuesDict[tag] = (initial: initialRule, text: nil, end: endRule)
+    tagValuesDict[tag] = (initial: initialRule, placeHolder: nil, end: endRule)
     existingTags.append(tag);
-    print((tag: tag, initial: initialRule, text:"", end: endRule))
+    //print((tag: tag, initial: initialRule, placeHolder:"", end: endRule))
 
 }
 
 
 // text file
-let textContent = try String(contentsOfFile: "/code/text.txt")
-let textParts = textContent.split(separator: "\n")
+let textContent = try String(contentsOfFile: "/code/\(textFileName)")
+var textParts = textContent.split(separator: "\n")
+print(textParts)
 
 // plain file
-let userContent = try String(contentsOfFile: "/code/plain.txt")
-let userParts = userContent.split(separator: "\n")
+let tagsContent = try String(contentsOfFile: "/code/\(tagFileName)")
+let tagsParts = tagsContent.split(separator: "\n")
 
 var identation: Int? = nil
 var tag: String? = nil
-var tagStack: [(identation: Int, text: String?, tag: String)] = []
+var tagStack: [(identation: Int, placeHolder: String?, tag: String)] = []
 
 enum initial_or_end {
     case initial
@@ -51,11 +59,15 @@ enum initial_or_end {
 
 var finalString: String = ""
 
-func getConversion(tagInfo: (identation: Int, text: String?, tag: String), position :initial_or_end) -> String {
+func getConversion(tagInfo: (identation: Int, placeHolder: String?, tag: String), position :initial_or_end) -> String {
     
     let identation = tagInfo.identation
 
-    let text = tagInfo.text ?? ""
+    var text = ""
+    if let placeHolder = tagInfo.placeHolder, position == .initial {
+        text = placeHolder == "{text}" ? String(textParts.removeFirst()) : ""
+    } 
+    
 
     let tag = tagInfo.tag
 
@@ -71,23 +83,22 @@ func getConversion(tagInfo: (identation: Int, text: String?, tag: String), posit
     }
 }
 
-func addToFinalString(tagInfo: (identation: Int, text: String?, tag: String), position :initial_or_end) -> Void{
+func addToFinalString(tagInfo: (identation: Int, placeHolder: String?, tag: String), position :initial_or_end) -> Void{
     //print("----------")
     finalString += getConversion(tagInfo: tagInfo, position: position) + "\n"
-    //return finalString
 }
 
-for str in userParts{
+for str in tagsParts{
     guard let indexOfHashtag = str.firstIndex(of: "#") else{
         continue
     }
 
     var tagEndIndex = str.endIndex
-    var text: String? = nil
-    if let indexOfTextSpace = str[indexOfHashtag...].firstIndex(of: " "){
-        tagEndIndex = indexOfTextSpace
-        let indexOfTextStart = str.index(indexOfTextSpace, offsetBy: 1, limitedBy: str.endIndex) ?? indexOfTextSpace
-        text = String(str[indexOfTextStart...])
+    var placeHolder: String? = nil
+    if let indexOfPlaceHolderSpace = str[indexOfHashtag...].firstIndex(of: " "){
+        tagEndIndex = indexOfPlaceHolderSpace
+        let indexOfPlaceHolderStart = str.index(indexOfPlaceHolderSpace, offsetBy: 1, limitedBy: str.endIndex) ?? indexOfPlaceHolderSpace
+        placeHolder = String(str[indexOfPlaceHolderStart...])
     }
 
     identation = str.distance(from: str.startIndex, to: indexOfHashtag)
@@ -96,14 +107,14 @@ for str in userParts{
     while true {
 
         if tagStack.isEmpty {
-            let tagInfo = (identation: identation!, text: text, tag: tag!)
+            let tagInfo = (identation: identation!, placeHolder: placeHolder, tag: tag!)
             addToFinalString(tagInfo: tagInfo, position: .initial)
             tagStack.append(tagInfo)
             break
         }
         else
         if tagStack[tagStack.count - 1].identation < identation! {
-            let tagInfo = (identation: identation!, text: text, tag: tag!)
+            let tagInfo = (identation: identation!, placeHolder: placeHolder, tag: tag!)
             addToFinalString(tagInfo: tagInfo, position: .initial)
             tagStack.append(tagInfo)
             break
@@ -127,8 +138,10 @@ for _ in tagStack{
 //print(finalString)
 
 do {
-    let url = URL(fileURLWithPath: "/code/end.html")
+    let url = URL(fileURLWithPath: "/code/\(outputFileName)")
     try finalString.write(to: url, atomically: true, encoding: String.Encoding.utf8)
 } catch {
     print("erro")
 }
+
+print(finalString)

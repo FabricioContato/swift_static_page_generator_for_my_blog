@@ -67,6 +67,12 @@ end
 </body>
 </html>
 %---%
+#img
+initial
+<img class="img-fluid" src="
+end
+" />
+%---%
 #container-card
 initial
 <div class="card card-body mb-3">

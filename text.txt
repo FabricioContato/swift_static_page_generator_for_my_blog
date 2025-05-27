@@ -3,3 +3,5 @@ Card Title
 Card first paragraph
 
 Card second paragraph
+
+./whats_icon.svg

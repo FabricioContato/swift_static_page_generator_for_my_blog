@@ -1,5 +1,6 @@
-#html 
+
  #container-card
   #h2 {text}
   #p {text}
   #p {text}
+  #img {text}
