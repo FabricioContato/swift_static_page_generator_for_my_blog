@@ -1,7 +1,8 @@
-Card Title
+#html 
+ #card-title Card Title
 
-Card first paragraph
+  #p Card first paragraph
 
-Card second paragraph
+  #p Card second paragraph
 
-./whats_icon.svg
+  #img ./whats_icon.svg

@@ -79,6 +79,14 @@ initial
 end
 </div>
 %---%
+#card-title
+initial
+<div class="card card-body mb-3">
+ <h2>
+end
+ </h2>
+</div>
+%---%
 #h2
 initial
 <h2>
