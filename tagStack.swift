@@ -10,20 +10,22 @@ enum initial_or_end {
 
 func getConversion(tagSettings: TagSettings, position :initial_or_end) -> String {
     
-    let identation = TagSettings.identation
+    let identation = tagSettings.identation
 
-    var text = TagSettings.text ?? ""
-
-    let tag = TagSettings.tag
+    let text = tagSettings.text ?? ""
+    
 
     if position == .initial {
-        guard let initalValue = TagSettings.initial else {return ""}
+        let initalValue = tagSettings.initial
+
+        if "#<" == tagSettings.tag{
+            return initalValue + text
+        }
 
         return String(repeating:" ", count: identation) + initalValue + text
     }else
     {
-        guard let endValue = TagSettings.end else {return ""}
-
+        let endValue = tagSettings.end
         return String(repeating:" ", count: identation) + endValue
     }
 }
@@ -34,21 +36,21 @@ func addToFinalString(tagSettings: TagSettings, position :initial_or_end) -> Voi
 
 func tagstackAppendTagSettings(tagSettingsArry: [TagSettings]) -> Void{
 
-    for tagSettinsg in tagSettingsArry{
+    for tagSettings in tagSettingsArry{
     
         while true {
 
             if tagStack.isEmpty {
                 //let tagSettings = TagSettings(identation: identation!, text: text, tag: tag!)
                 addToFinalString(tagSettings: tagSettings, position: .initial)
-                tagStack.append(tagInfo)
+                tagStack.append(tagSettings)
                 break
             }
             else
-            if tagStack[tagStack.count - 1].identation < tagSettinsg.identation {
+            if tagStack[tagStack.count - 1].identation < tagSettings.identation {
                 //let tagInfo = (identation: identation!, text: text, tag: tag!)
-                addToFinalString(tagInfo: tagInfo, position: .initial)
-                tagStack.append(tagInfo)
+                addToFinalString(tagSettings: tagSettings, position: .initial)
+                tagStack.append(tagSettings)
                 break
             }
             else{

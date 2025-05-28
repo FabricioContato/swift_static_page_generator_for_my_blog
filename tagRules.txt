@@ -79,12 +79,16 @@ initial
 end
 </div>
 %---%
-#card-title
+#card-title #h2
 initial
 <div class="card card-body mb-3">
- <h2>
 end
- </h2>
+</div>
+%---%
+#card-p #p
+initial
+<div class="card card-body mb-3">
+end
 </div>
 %---%
 #h2
@@ -116,3 +120,27 @@ initial
 <p>
 end
 </p>
+%---%
+#ul
+initial
+<ul>
+end
+</ul>
+%---%
+#li
+initial
+<li>
+end
+</li>
+%---%
+#gray-code
+initial
+<pre><code>
+end
+</code></pre>
+%---%
+#js-code
+initial
+<pre><code class="language-javascript">
+end
+</code><pre>

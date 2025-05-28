@@ -36,10 +36,10 @@ for str in tagLines{
     var tagSettingsArry = getTagSettingsArryByTag(tag: tag!)
     tagSettingsArry[0].setIdentation(newIdentation:identation!)
     if tagSettingsArry.count == 2 {
-        tagSettingsArry[1].setText(newText:text!)
+        tagSettingsArry[1].setText(newText:text ?? "")
         tagSettingsArry[1].setIdentation(newIdentation:identation! + 1)
     }else {
-        tagSettingsArry[0].setText(newText:text!)
+        tagSettingsArry[0].setText(newText:text ?? "")
     }
 
     tagstackAppendTagSettings(tagSettingsArry:tagSettingsArry)

@@ -63,6 +63,13 @@ func populateTagValuesDict() -> Void{
         existingTags.append(tag);
 
     }
+
+    //expecial tags
+
+    tagValuesDict["#<"] = TagSettings(tag: "#<", initial: "", text: nil, end: "\n", relatedTags: nil)
+    existingTags.append("#<");
+    tagValuesDict["#_"] = TagSettings(tag: "#_", initial: "", text: nil, end: "\n", relatedTags: nil)
+    existingTags.append("#<");
 }
 
 func getTagSettingsArryByTag(tag: String) -> [TagSettings]{
