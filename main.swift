@@ -1,12 +1,33 @@
 import Foundation
 
+extension String {
+    var escapedHTML: String {
+        var result = self
+        let htmlEscapes: [String: String] = [
+            "<": "&lt;",
+            ">": "&gt;"
+        ]
+        for (char, escape) in htmlEscapes {
+            result = result.replacingOccurrences(of: char, with: escape)
+        }
+        return result
+    }
+}
+
+
+
 populateTagValuesDict()
 
-print("<user-file-name> <output-file-name>")
-let userInputs = readLine()!.split(separator: " ")
+//print("<user-file-name> <output-file-name> <identations>")
+//let userInputs = readLine()!.split(separator: " ")
 
-let userFileName = userInputs[0]
-let outputFileName = userInputs[1]
+//let userFileName = userInputs[0]
+//let outputFileName = userInputs[1]
+//let userIdentation = Int(String(userInputs[2])) ?? 1
+
+let userFileName = "text2.txt"
+let outputFileName = "output.html"
+let userIdentation = 2
 
 // plain file
 let userContent = try String(contentsOfFile: "/code/\(userFileName)")
@@ -35,11 +56,13 @@ for str in tagLines{
 
     var tagSettingsArry = getTagSettingsArryByTag(tag: tag!)
     tagSettingsArry[0].setIdentation(newIdentation:identation!)
+
+
     if tagSettingsArry.count == 2 {
-        tagSettingsArry[1].setText(newText:text ?? "")
-        tagSettingsArry[1].setIdentation(newIdentation:identation! + 1)
+        tagSettingsArry[1].setText(newText:text?.escapedHTML ?? "")
+        tagSettingsArry[1].setIdentation(newIdentation:identation! + userIdentation)
     }else {
-        tagSettingsArry[0].setText(newText:text ?? "")
+        tagSettingsArry[0].setText(newText:text?.escapedHTML ?? "")
     }
 
     tagstackAppendTagSettings(tagSettingsArry:tagSettingsArry)
