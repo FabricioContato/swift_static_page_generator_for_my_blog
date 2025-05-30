@@ -1,3 +1,6 @@
 *.html
 *.svg
 text*
+/images/*.png
+/swiftFiles/css_js/*.*
+/swiftFiles/post_builder
