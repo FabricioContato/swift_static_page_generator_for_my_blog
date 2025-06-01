@@ -25,7 +25,7 @@ var existingTags: [String] = []
 func populateTagValuesDict() -> Void{
     var ruleContent: String = " "
     do{
-        ruleContent = try String(contentsOfFile: "/code/tagRules.txt")
+        ruleContent = try String(contentsOfFile: "\(exeDirectory.path)/tagRules.txt")
     } catch {
         print("erro")
     }

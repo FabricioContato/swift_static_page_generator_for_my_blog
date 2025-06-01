@@ -1,5 +1,23 @@
 import Foundation
 
+let passedArguments = CommandLine.arguments
+
+let exePath = CommandLine.arguments[0]
+let exeURL = URL(fileURLWithPath: exePath).standardized
+let exeDirectory = exeURL.deletingLastPathComponent()
+
+var userFileName = "text.txt"
+var outputFileName = "output.html"
+let userIdentation = 1
+
+if passedArguments.count >= 2{
+    userFileName = passedArguments[1]
+}
+
+if passedArguments.count >= 3{
+    outputFileName = passedArguments[2]
+}
+
 extension String {
     var escapedHTML: String {
         var result = self
@@ -14,30 +32,22 @@ extension String {
     }
 }
 
-
-
 populateTagValuesDict()
 
-//print("<user-file-name> <output-file-name> <identations>")
-//let userInputs = readLine()!.split(separator: " ")
-
-//let userFileName = userInputs[0]
-//let outputFileName = userInputs[1]
-//let userIdentation = Int(String(userInputs[2])) ?? 1
-
-let userFileName = "text2.txt"
-let outputFileName = "output.html"
-let userIdentation = 2
 
 // plain file
-let userContent = try String(contentsOfFile: "/code/\(userFileName)")
+let userContent = try String(contentsOfFile: "\(exeDirectory.path)/\(userFileName)")
 let tagLines = userContent.split(separator: "\n")
 
 var identation: Int? = nil
 var tag: String? = nil
 
+// adding the default top-level tag #html
+var tagHtmlSettingsArry = getTagSettingsArryByTag(tag: "#html")
+tagHtmlSettingsArry[0].setIdentation(newIdentation:0)
+tagstackAppendTagSettings(tagSettingsArry:tagHtmlSettingsArry)
 
-
+// adding the user tags
 for str in tagLines{
     guard let indexOfHashtag = str.firstIndex(of: "#") else{
         continue
@@ -51,7 +61,7 @@ for str in tagLines{
         text = String(str[indexOftextStart...])
     }
 
-    identation = str.distance(from: str.startIndex, to: indexOfHashtag)
+    identation = str.distance(from: str.startIndex, to: indexOfHashtag) + 1
     tag = String(str[indexOfHashtag..<tagEndIndex])
 
     var tagSettingsArry = getTagSettingsArryByTag(tag: tag!)

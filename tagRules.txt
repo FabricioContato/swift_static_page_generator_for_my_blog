@@ -71,7 +71,7 @@ initial
 end
 " />
 %---%
-#container-card
+#top-card-title #h1
 initial
 <div class="card card-body mb-3">
 end
@@ -88,6 +88,12 @@ initial
 <div class="card card-body mb-3">
 end
 </div>
+%---%
+#h1
+initial
+<h1>
+end
+</h1>
 %---%
 #h2
 initial
