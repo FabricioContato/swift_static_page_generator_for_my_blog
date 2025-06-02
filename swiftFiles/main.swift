@@ -7,16 +7,16 @@ let exeURL = URL(fileURLWithPath: exePath).standardized
 let exeDirectory = exeURL.deletingLastPathComponent()
 
 var userFileName = "text.txt"
-var outputFileName = "output.html"
+//var outputFileName = "output.html"
 let userIdentation = 1
 
 if passedArguments.count >= 2{
     userFileName = passedArguments[1]
 }
 
-if passedArguments.count >= 3{
-    outputFileName = passedArguments[2]
-}
+//if passedArguments.count >= 3{
+//    outputFileName = passedArguments[2]
+//}
 
 extension String {
     var escapedHTML: String {
@@ -37,7 +37,9 @@ populateTagValuesDict()
 
 // plain file
 let userContent = try String(contentsOfFile: "\(exeDirectory.path)/\(userFileName)")
-let tagLines = userContent.split(separator: "\n")
+var tagLines = userContent.split(separator: "\n")
+
+let outputFileName = String(tagLines.removeFirst())
 
 var identation: Int? = nil
 var tag: String? = nil

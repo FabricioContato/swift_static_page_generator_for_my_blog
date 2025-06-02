@@ -1,9 +1,28 @@
+post4.html
+
 #top-card-title I coded my own static page builder
  #p What about software to speed up blog post building… No! I’m not using any CMS, and I’m not even using any third-party tool for it. I coded my own solution.
-
  #p In short, I have a job that requires me to learn the Swift language. So what’s the best way to learn a new language, if not by building a project in that language? And why not build a project that also helps with my personal work? Once again, I’m killing two birds with one codebase.
 
-#card-title Static Page Builder
+#card-title Static Page Builder In A Nutshell
  #p Many people don’t need to deal with HTML, CSS, and JS to write a webpage. They can use a static page builder. That kind of software allows you to focus on writing your content and uses a very simple code syntax, which will later be parsed into HTML, CSS, and JS code for you. The downside may be that they’re not very customizable, since how the parsing is done is set by the tool’s developer.
+ 
+#card-title For What Reason?
+ #p I have been writing and editing my HTML blog posts with not much automation. My process has been like:
+
+ #ul
+  #li I spend some time on Google Docs brainstorming.
+  #li After finishing the first version, I ask ChatGPT for grammar checks and suggestions.
+  #li If I'm not happy, I go back to brainstorming again and ask ChatGPT again.
+  #li Once I'm satisfied with my text, I edit the post HTML file.
+  #li Lastly, I add, commit, and push my blog project to my GitHub repository, which updates my blog online.
+
+ #p It wasn’t bothering me until recently, when I got the idea of having two versions of each blog page: one in English, for the world in general, and one in Portuguese, for my fellow Brazilians that I invite to read my blog. There are other solutions for this language problem, but I will talk more about that in another post.
+
+ #p OK, I can write a blog post in one language and ask free-tier ChatGPT to translate it for me, but what if I change the default structure of my blog post and then have to go through each one manually to change their code!? Remember that they will be twice as many, so the number of files may escalate quickly.
+
+ #p An automated solution that takes text files and turns them into my blog format would be very handy.
+
+ #p Plus, it would be nice to also be able to write my raw blog text and, after a click, have the HTML page generated.
 
  #p My project idea would allow me to write a file for my blog post, and then, with a few clicks, a program would read my file and generate an output file—like output.html—with all the HTML, CSS, and JS my blog post uses.
