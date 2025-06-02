@@ -82,7 +82,7 @@ for str in tagLines{
 unStackRemaining()
 
 do {
-    let url = URL(fileURLWithPath: "/code/\(outputFileName)")
+    let url = URL(fileURLWithPath: "\(exeDirectory.path)/\(outputFileName)")
     try finalString.write(to: url, atomically: true, encoding: String.Encoding.utf8)
 } catch {
     print("erro")
