@@ -1,7 +1,6 @@
 
 
 var tagStack: [TagSettings] = []
-var finalString: String = ""
 
 enum initial_or_end {
     case initial
@@ -30,11 +29,11 @@ func getConversion(tagSettings: TagSettings, position :initial_or_end) -> String
     }
 }
 
-func addToFinalString(tagSettings: TagSettings, position :initial_or_end) -> Void{
+func addToFinalString(finalString: inout String, tagSettings: TagSettings, position :initial_or_end) -> Void{
     finalString += getConversion(tagSettings: tagSettings, position: position)
 }
 
-func tagstackAppendTagSettings(tagSettingsArry: [TagSettings]) -> Void{
+func tagstackAppendTagSettings(finalString: inout String , tagSettingsArry: [TagSettings]) -> Void{
 
     for tagSettings in tagSettingsArry{
     
@@ -42,29 +41,29 @@ func tagstackAppendTagSettings(tagSettingsArry: [TagSettings]) -> Void{
 
             if tagStack.isEmpty {
                 //let tagSettings = TagSettings(identation: identation!, text: text, tag: tag!)
-                addToFinalString(tagSettings: tagSettings, position: .initial)
+                addToFinalString(finalString: &finalString ,tagSettings: tagSettings, position: .initial)
                 tagStack.append(tagSettings)
                 break
             }
             else
             if tagStack[tagStack.count - 1].identation < tagSettings.identation {
                 //let tagInfo = (identation: identation!, text: text, tag: tag!)
-                addToFinalString(tagSettings: tagSettings, position: .initial)
+                addToFinalString(finalString: &finalString ,tagSettings: tagSettings, position: .initial)
                 tagStack.append(tagSettings)
                 break
             }
             else{
                 let removedTagSettings = tagStack.removeLast()
-                addToFinalString(tagSettings: removedTagSettings, position: .end)
+                addToFinalString(finalString: &finalString ,tagSettings: removedTagSettings, position: .end)
                 //print(addToFinalString(tagInfo: removedtagInfo, position: .end))
             }
         }
     }
 }
 
-func unStackRemaining() -> Void{
+func unStackRemaining(finalString: inout String) -> Void{
     for _ in tagStack {
         let removedTagSettings = tagStack.removeLast()
-        addToFinalString(tagSettings: removedTagSettings, position: .end)
+        addToFinalString(finalString: &finalString, tagSettings: removedTagSettings, position: .end)
     }
 }

@@ -36,52 +36,14 @@ populateTagValuesDict()
 
 
 // plain file
-let userContent = try String(contentsOfFile: "\(exeDirectory.path)/\(userFileName)")
-var tagLines = userContent.split(separator: "\n")
-
-let outputFileName = String(tagLines.removeFirst())
-
-var identation: Int? = nil
-var tag: String? = nil
-
-// adding the default top-level tag #html
-var tagHtmlSettingsArry = getTagSettingsArryByTag(tag: "#html")
-tagHtmlSettingsArry[0].setIdentation(newIdentation:0)
-tagstackAppendTagSettings(tagSettingsArry:tagHtmlSettingsArry)
-
-// adding the user tags
-for str in tagLines{
-    guard let indexOfHashtag = str.firstIndex(of: "#") else{
-        continue
-    }
-
-    var tagEndIndex = str.endIndex
-    var text: String? = nil
-    if let indexOftextSpace = str[indexOfHashtag...].firstIndex(of: " "){
-        tagEndIndex = indexOftextSpace
-        let indexOftextStart = str.index(indexOftextSpace, offsetBy: 1, limitedBy: str.endIndex) ?? indexOftextSpace
-        text = String(str[indexOftextStart...])
-    }
-
-    identation = str.distance(from: str.startIndex, to: indexOfHashtag) + 1
-    tag = String(str[indexOfHashtag..<tagEndIndex])
-
-    var tagSettingsArry = getTagSettingsArryByTag(tag: tag!)
-    tagSettingsArry[0].setIdentation(newIdentation:identation!)
+//let userContent = try String(contentsOfFile: "\(exeDirectory.path)/\(userFileName)")
+//var tagLines = userContent.split(separator: "\n")
 
 
-    if tagSettingsArry.count == 2 {
-        tagSettingsArry[1].setText(newText:text?.escapedHTML ?? "")
-        tagSettingsArry[1].setIdentation(newIdentation:identation! + userIdentation)
-    }else {
-        tagSettingsArry[0].setText(newText:text?.escapedHTML ?? "")
-    }
+let finalStringAndOutputFileName = buildFinalString(targetPath: exeDirectory.path, txtFileName: userFileName)
+let finalString = finalStringAndOutputFileName.finalString
+let outputFileName = finalStringAndOutputFileName.outputFileName
 
-    tagstackAppendTagSettings(tagSettingsArry:tagSettingsArry)
-
-}
-
-unStackRemaining()
 
 do {
     let url = URL(fileURLWithPath: "\(exeDirectory.path)/\(outputFileName)")
