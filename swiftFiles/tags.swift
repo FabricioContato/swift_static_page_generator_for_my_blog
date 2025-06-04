@@ -1,5 +1,4 @@
-
-
+import Foundation
 
 struct TagSettings {
     var tag: String
@@ -27,14 +26,18 @@ func populateTagValuesDict(targetPath: String) -> Void{
     do{
         ruleContent = try String(contentsOfFile: "\(targetPath)/tagRules.tr")
     } catch {
-        print("erro")
+        print("file tagRules.tr not found at paht \(targetPath)")
+        exit(1)
     }
     let ruleParts = ruleContent.split(separator: "\n%---%\n")
 
     for tagSet in ruleParts{
 
         var tag = " "
-        let tagFinalIndex = tagSet.range(of: "\ninitial\n")!.lowerBound
+        guard let tagFinalIndex = tagSet.range(of: "\ninitial\n")?.lowerBound else { 
+            print("tag \(tag) not well defined!")
+            exit(1)
+        }
         let tagLine = String(tagSet[..<tagFinalIndex])
 
         var relatedTags: [String]? = nil
@@ -47,12 +50,23 @@ func populateTagValuesDict(targetPath: String) -> Void{
             tag = tagLine
         }
         
-        let initialRuleStartIndex = tagSet.index(tagSet.range(of: "initial\n")!.lowerBound, offsetBy: 8, limitedBy: tagSet.endIndex)!
-        let initialRulefinalIndex = tagSet.range(of: "\nend\n")!.lowerBound
+        guard let initialRuleStartIndex = tagSet.index(tagSet.range(of: "initial\n")!.lowerBound, offsetBy: 8, limitedBy: tagSet.endIndex) else {
+            print("tag \(tag) not well defined!")
+            exit(1)
+        }
+
+        guard let initialRulefinalIndex = tagSet.range(of: "\nend\n")?.lowerBound else {
+            print("tag \(tag) not well defined!")
+            exit(1)
+        }
 
         let initialRule = String(tagSet[initialRuleStartIndex..<initialRulefinalIndex])
 
-        let endRuleStartIndex = tagSet.index(tagSet.range(of: "end\n")!.lowerBound, offsetBy: 4, limitedBy: tagSet.endIndex)!
+        guard let endRuleStartIndex = tagSet.index(tagSet.range(of: "end\n")!.lowerBound, offsetBy: 4, limitedBy: tagSet.endIndex) else {
+            print("tag \(tag) not well defined!")
+            exit(1)
+        }
+
         let endRuleFinalIndex = tagSet.endIndex
 
         let endRule = String(tagSet[endRuleStartIndex..<endRuleFinalIndex])
@@ -73,12 +87,19 @@ func populateTagValuesDict(targetPath: String) -> Void{
 }
 
 func getTagSettingsArryByTag(tag: String) -> [TagSettings]{
-    let tagSettings = tagValuesDict[tag]!
+    guard let tagSettings = tagValuesDict[tag] else {
+            print("tag \(tag) not found!")
+            exit(1)
+        }
+
     var tagSettingsArry: [TagSettings] = []
     tagSettingsArry.append(tagSettings)
     if tagSettings.relatedTags != nil {
         //for now, realtedTags only has one string
-        let relatedTagSettings: TagSettings = tagValuesDict[tagSettings.relatedTags![0]]!
+        guard let relatedTagSettings: TagSettings = tagValuesDict[tagSettings.relatedTags![0]] else {
+            print("tag \(tagSettings.relatedTags![0]) not found!")
+            exit(1)
+        }
         tagSettingsArry.append(relatedTagSettings)
     }
 

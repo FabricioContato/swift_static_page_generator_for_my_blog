@@ -7,22 +7,32 @@ let passedArguments = CommandLine.arguments
 //let programCall = CommandLine.arguments[0]
 var targetPath: String = URL(fileURLWithPath: ".").standardized.path
 var outputPath: String = URL(fileURLWithPath: ".").standardized.path
-print(targetPath)
 
 // default values
 var fileNameArry: [String] = ["text.txt"]
 let userIdentationPattern = 1
 
 //
-func getTxtFileNames(in folderURL: String) -> [String]? {
+func getTxtFileNames(in folderURL: String) -> [String] {
+    let allItems: [String]
+    let txtFiles: [String]
+    
     do {
-        let allItems = try FileManager.default.contentsOfDirectory(atPath: folderURL)
-        let txtFiles = allItems.filter { $0.hasSuffix(".txt") }
-        return txtFiles
+        allItems = try FileManager.default.contentsOfDirectory(atPath: folderURL)
     } catch {
-        print("Error reading contents of directory: \(error)")
-        return nil
+        print("Folder \(folderURL) does not exist")
+        exit(1)
     }
+
+    txtFiles = allItems.filter { $0.hasSuffix(".txt") }
+
+    guard txtFiles.count > 0 else { 
+        print("No .txt file was found inside folder \(folderURL)")
+        exit(1)
+    }
+
+    return txtFiles
+
 }
 
 // Function to find out if a path is a folder or not
@@ -32,22 +42,35 @@ func isFolder(at url: URL) -> Bool {
     return exists && isDirectory.boolValue
 }
 
+func isFile(at url: URL) -> Bool {
+    var isDirectory: ObjCBool = false
+    let exists = FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+    return exists && !isDirectory.boolValue
+}
+
 // subscribing default value
 if passedArguments.count >= 2{
     let secondArgument = passedArguments[1]
     if isFolder(at: URL(fileURLWithPath: secondArgument)) {
         targetPath = URL(fileURLWithPath: secondArgument).standardized.path
-        fileNameArry = getTxtFileNames(in : targetPath)!
+        fileNameArry = getTxtFileNames(in : targetPath)
         
     }
-    else{
+    else if isFile(at: URL(fileURLWithPath: secondArgument)){
         fileNameArry = [secondArgument]
+    }
+    else{
+        print("Argument \(secondArgument) is neither a folder not a file!")
+        exit(1)
     }
 
     if passedArguments.count >= 3 {
         let thirdAgument: String = passedArguments[2]
         if isFolder(at: URL(fileURLWithPath: thirdAgument)) {
             outputPath = URL(fileURLWithPath: thirdAgument).standardized.path
+        }else{
+            print("Argument \(thirdAgument) is not a folder")
+            exit(1)
         }
 
     }
@@ -75,6 +98,7 @@ func writeOutputFile(outputPath: String, outputFileName: String, finalString: St
         try finalString.write(to: url, atomically: true, encoding: String.Encoding.utf8)
     } catch {
         print("I could not write file \(outputFileName) on folder \(outputPath)")
+        exit(1)
     }
 
 }

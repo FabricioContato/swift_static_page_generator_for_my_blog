@@ -40,14 +40,12 @@ func tagstackAppendTagSettings(finalString: inout String , tagSettingsArry: [Tag
         while true {
 
             if tagStack.isEmpty {
-                //let tagSettings = TagSettings(identation: identation!, text: text, tag: tag!)
                 addToFinalString(finalString: &finalString ,tagSettings: tagSettings, position: .initial)
                 tagStack.append(tagSettings)
                 break
             }
             else
             if tagStack[tagStack.count - 1].identation < tagSettings.identation {
-                //let tagInfo = (identation: identation!, text: text, tag: tag!)
                 addToFinalString(finalString: &finalString ,tagSettings: tagSettings, position: .initial)
                 tagStack.append(tagSettings)
                 break
@@ -55,7 +53,6 @@ func tagstackAppendTagSettings(finalString: inout String , tagSettingsArry: [Tag
             else{
                 let removedTagSettings = tagStack.removeLast()
                 addToFinalString(finalString: &finalString ,tagSettings: removedTagSettings, position: .end)
-                //print(addToFinalString(tagInfo: removedtagInfo, position: .end))
             }
         }
     }
