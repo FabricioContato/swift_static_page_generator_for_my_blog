@@ -22,10 +22,10 @@ struct TagSettings {
 var tagValuesDict: [String: TagSettings] = [:]
 var existingTags: [String] = []
 
-func populateTagValuesDict() -> Void{
+func populateTagValuesDict(targetPath: String) -> Void{
     var ruleContent: String = " "
     do{
-        ruleContent = try String(contentsOfFile: "\(exeDirectory.path)/tagRules.txt")
+        ruleContent = try String(contentsOfFile: "\(targetPath)/tagRules.tr")
     } catch {
         print("erro")
     }

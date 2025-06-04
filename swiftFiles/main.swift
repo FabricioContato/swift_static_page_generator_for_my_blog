@@ -1,23 +1,59 @@
 import Foundation
 
+// get user arguments
 let passedArguments = CommandLine.arguments
 
-let exePath = CommandLine.arguments[0]
-let exeURL = URL(fileURLWithPath: exePath).standardized
-let exeDirectory = exeURL.deletingLastPathComponent()
+// get program call context
+//let programCall = CommandLine.arguments[0]
+var targetPath: String = URL(fileURLWithPath: ".").standardized.path
+var outputPath: String = URL(fileURLWithPath: ".").standardized.path
+print(targetPath)
 
-var userFileName = "text.txt"
-//var outputFileName = "output.html"
-let userIdentation = 1
+// default values
+var fileNameArry: [String] = ["text.txt"]
+let userIdentationPattern = 1
 
-if passedArguments.count >= 2{
-    userFileName = passedArguments[1]
+//
+func getTxtFileNames(in folderURL: String) -> [String]? {
+    do {
+        let allItems = try FileManager.default.contentsOfDirectory(atPath: folderURL)
+        let txtFiles = allItems.filter { $0.hasSuffix(".txt") }
+        return txtFiles
+    } catch {
+        print("Error reading contents of directory: \(error)")
+        return nil
+    }
 }
 
-//if passedArguments.count >= 3{
-//    outputFileName = passedArguments[2]
-//}
+// Function to find out if a path is a folder or not
+func isFolder(at url: URL) -> Bool {
+    var isDirectory: ObjCBool = false
+    let exists = FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+    return exists && isDirectory.boolValue
+}
 
+// subscribing default value
+if passedArguments.count >= 2{
+    let secondArgument = passedArguments[1]
+    if isFolder(at: URL(fileURLWithPath: secondArgument)) {
+        targetPath = URL(fileURLWithPath: secondArgument).standardized.path
+        fileNameArry = getTxtFileNames(in : targetPath)!
+        
+    }
+    else{
+        fileNameArry = [secondArgument]
+    }
+
+    if passedArguments.count >= 3 {
+        let thirdAgument: String = passedArguments[2]
+        if isFolder(at: URL(fileURLWithPath: thirdAgument)) {
+            outputPath = URL(fileURLWithPath: thirdAgument).standardized.path
+        }
+
+    }
+}
+
+// html tag scaping extension
 extension String {
     var escapedHTML: String {
         var result = self
@@ -32,24 +68,25 @@ extension String {
     }
 }
 
-populateTagValuesDict()
+// output file writing function
+func writeOutputFile(outputPath: String, outputFileName: String, finalString: String){
+    do {
+        let url = URL(fileURLWithPath: "\(outputPath)/\(outputFileName)")
+        try finalString.write(to: url, atomically: true, encoding: String.Encoding.utf8)
+    } catch {
+        print("I could not write file \(outputFileName) on folder \(outputPath)")
+    }
 
-
-// plain file
-//let userContent = try String(contentsOfFile: "\(exeDirectory.path)/\(userFileName)")
-//var tagLines = userContent.split(separator: "\n")
-
-
-let finalStringAndOutputFileName = buildFinalString(targetPath: exeDirectory.path, txtFileName: userFileName)
-let finalString = finalStringAndOutputFileName.finalString
-let outputFileName = finalStringAndOutputFileName.outputFileName
-
-
-do {
-    let url = URL(fileURLWithPath: "\(exeDirectory.path)/\(outputFileName)")
-    try finalString.write(to: url, atomically: true, encoding: String.Encoding.utf8)
-} catch {
-    print("erro")
 }
 
-print(finalString)
+
+// initiate the tag dictionary
+populateTagValuesDict(targetPath: targetPath)
+
+
+for (index, aux) in buildFinalStringsArry(targetPath: targetPath, fileNameArry: fileNameArry).enumerated() {
+    writeOutputFile(outputPath: outputPath, outputFileName: aux.outputFileName, finalString: aux.finalString)
+    print("convertion of \(fileNameArry[index]) into \(aux.outputFileName) is done!")
+}
+
+print("All convertions are done!")
